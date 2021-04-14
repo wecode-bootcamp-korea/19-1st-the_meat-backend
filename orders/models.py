@@ -1,24 +1,32 @@
 from django.db import models
 from django.db.models.deletion import CASCADE
-
+        
 class Order(models.Model):
-    status = models.ForeignKey('OrderStatus', on_delete = CASCADE)
-    user   = models.ForeignKey('users.Users', on_delete = CASCADE)
+    status  = models.ForeignKey('OrderStatus', on_delete = CASCADE)
+    user    = models.ForeignKey('users.User', on_delete = CASCADE)
+    product = models.ManyToManyField('products.Product', through ='ProductOrder')
     
-    product = models.ManyToManyField('products.Products', through ='ProductsOrder')
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
     
     class Meta:
         db_table = 'orders'
 
 class OrderStatus(models.Model):
-    status = models.SmallIntegerField()
-    
+    order_status = models.SmallIntegerField()
+
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
+
     class Meta:
         db_table = 'status'
         
-class ProductsOrder(models.Model):
-    order   = models.ForeignKey('Order', on_delete = CASCADE)
-    product = models.ForeignKey('products.Products', on_delete = CASCADE)
-    
+class ProductOrder(models.Model):
+    order   = models.ForeignKey(Order, on_delete = CASCADE)
+    product = models.ForeignKey('products.Product', on_delete = CASCADE)
+
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
+        
     class Meta:
         db_table = 'products_order'
