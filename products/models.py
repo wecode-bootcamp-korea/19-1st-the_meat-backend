@@ -1,5 +1,5 @@
 from django.db                 import models
-from django.db.models.deletion import CASCADE
+from django.db.models.deletion import CASCADE, SET_NULL
 from django.db.models.fields   import URLField
 
 class Category(models.Model):
@@ -13,6 +13,7 @@ class Category(models.Model):
         
 class SubCategory(models.Model):
     name     = models.CharField(max_length = 30)
+    
     category = models.ForeignKey(Category, on_delete = CASCADE)
     
     created_at = models.DateTimeField(auto_now_add = True)
@@ -29,10 +30,10 @@ class Product(models.Model):
     unit           = models.DecimalField(max_digits = 3, decimal_places = 2)
     best_before    = models.IntegerField()
     
+    sub_category = models.ForeignKey('SubCategory', on_delete = SET_NULL, null = True)
+
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
-    
-    sub_category = models.ForeignKey('SubCategory', on_delete = CASCADE)
     
     class Meta:
         db_table = "products"

@@ -1,8 +1,8 @@
 from django.db import models
-from django.db.models.deletion import CASCADE
+from django.db.models.deletion import CASCADE, SET_NULL
         
 class Order(models.Model):
-    status  = models.ForeignKey('OrderStatus', on_delete = CASCADE)
+    status  = models.ForeignKey('OrderStatus', on_delete = SET_NULL, null = True)
     user    = models.ForeignKey('users.User', on_delete = CASCADE)
     product = models.ManyToManyField('products.Product', through ='ProductOrder')
     
@@ -22,9 +22,10 @@ class OrderStatus(models.Model):
         db_table = 'status'
         
 class ProductOrder(models.Model):
-    order   = models.ForeignKey(Order, on_delete = CASCADE)
-    product = models.ForeignKey('products.Product', on_delete = CASCADE)
-
+    order   = models.ForeignKey(Order, on_delete = SET_NULL, null = True)
+    product = models.ForeignKey('products.Product', on_delete = SET_NULL, null = True)
+    
+    quantity = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
         

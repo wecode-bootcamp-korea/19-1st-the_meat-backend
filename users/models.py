@@ -1,5 +1,5 @@
 from django.db                 import models
-from django.db.models.deletion import CASCADE
+from django.db.models.deletion import CASCADE, SET, SET_NULL
         
 class User(models.Model):
     username     = models.CharField(max_length = 20)
@@ -8,7 +8,7 @@ class User(models.Model):
     phone_number = models.CharField(max_length = 30)
     email        = models.EmailField(max_length = 60)
     main_address = models.CharField(max_length = 100)
-   
+    
     user_rank = models.ForeignKey('UserRank', on_delete = CASCADE)
 
     created_at = models.DateTimeField(auto_now_add = True)
@@ -48,7 +48,7 @@ class Voucher(models.Model):
     created_at = models.DateTimeField(auto_now_add = True)
     
     user         = models.ManyToManyField(User, through = 'UserVoucher')
-    voucher_type = models.ForeignKey('VoucherType', on_delete = CASCADE)
+    voucher_type = models.ForeignKey('VoucherType', on_delete = SET_NULL, null = True)
     
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
@@ -67,7 +67,7 @@ class VoucherType(models.Model):
         
 class UserVoucher(models.Model):
     user    = models.ForeignKey(User, on_delete = CASCADE)
-    voucher = models.ForeignKey(Voucher, on_delete = CASCADE)
+    voucher = models.ForeignKey(Voucher, on_delete = SET_NULL, null = True)
 
     is_used = models.SmallIntegerField()
 
