@@ -1,4 +1,5 @@
 import json
+<<<<<<< HEAD
 from theMeat.users.models import User
 
 from django.http.response import JsonResponse
@@ -28,3 +29,12 @@ class AddCartView(View):
         
         except:
             return None
+=======
+
+from django.views import View
+
+# from .models import *
+
+class OrderView(View):
+    pass
+>>>>>>> e4a0d7aecc0ce68ec3c0f9943a0a1c013cfff408
