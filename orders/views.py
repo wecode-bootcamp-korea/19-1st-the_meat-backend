@@ -1,11 +1,10 @@
 import json
-from theMeat.users.models import User
 
 from django.http.response import JsonResponse
 from django.views         import View
 
-from .models         import Order, Status, ProductOrder
-from products.models import Product
+# from .models         import Order, Status, ProductOrder
+# from products.models import Product
 
 # @loginDecorator
 class AddCartView(View):
