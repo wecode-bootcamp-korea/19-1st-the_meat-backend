@@ -21,17 +21,9 @@ class SubCategory(models.Model):
         
 class Product(models.Model):
     name           = models.CharField(max_length = 100)
-<<<<<<< HEAD
     price          = models.DecimalField(max_digits = 10, decimal_places = 2)
     discount_rate  = models.DecimalField(max_digits = 5, decimal_places = 2, default = 0)
-    real_price     = models.DecimalField(max_digits = 10, decimal_places = 2)
     unit           = models.DecimalField(max_digits = 5, decimal_places = 2)
-=======
-    price          = models.DecimalField(max_digits = 8, decimal_places = 2)
-    discount_rate  = models.DecimalField(max_digits = 3, decimal_places = 2, default = 0)
-    discount_price = models.DecimalField(max_digits = 8, decimal_places = 2, default = price)
-    unit           = models.DecimalField(max_digits = 3, decimal_places = 2)
->>>>>>> e4a0d7aecc0ce68ec3c0f9943a0a1c013cfff408
     best_before    = models.IntegerField()
     sub_category   = models.ForeignKey('SubCategory', on_delete = SET_NULL, null = True)
     created_at     = models.DateTimeField(auto_now_add = True)
@@ -39,6 +31,9 @@ class Product(models.Model):
     
     class Meta:
         db_table = "products"
+        
+    def real_price(self):
+        return self.price * (1 - self.discount_rate)
         
 class ProductImage(models.Model):
     image_url  = models.URLField(max_length = 500)
