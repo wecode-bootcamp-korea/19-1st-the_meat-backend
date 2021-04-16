@@ -1,35 +1,38 @@
-import json
+# import json
 
-from django.http.response import JsonResponse
+# from django.http.response import JsonResponse
 from django.views         import View
 
-from .models         import Order, Status, ProductOrder
-from users.models    import User
-from products.models import Product
+# from .models         import Order, Status, ProductOrder
+# from users.models    import User
+# from products.models import Product
 
-# @loginDecorator
+# # @loginDecorator
 class AddCartView(View):
-    def post(self, request):
+#     def post(self, request):
         
-        # user = request.user
-        try:
-            data = json.loads(request.body)
-            user_id = request.user
+#         user_id = request.user
+#         data = request.loads(request.body)
+#         if not User.objects.filter(id = user_id).exist():
+#             unlogin_user = User.objects.create()
+#             Order.objects.create(user = )
+#     user       = models.ForeignKey('users.User', on_delete = CASCADE)
+#     product    = models.ManyToManyField('products.Product', through ='ProductOrder')
+#     created_at = models.DateTimeField(auto_now_add = True)
+#     updated_at
+#         try:
+            
+            
 
-            if not Order.objects.filter(user_id = user_id).exist:
-                Order.objects.create(status=Status.objects.get(id=2),
-                                     user = User.objects.get(id=request.user)
-                                     )
-            if Order.objects.get(user_id = request.user).status_id != 3:
-                None
+
 
             
             
-            return JsonResponse({'message': 'status'}, status = 200)
+#             return JsonResponse({'message': 'status'}, status = 200)
         
-        except:
-            return None
+#         except:
+#             return None
 
-class OrderView(View):
+# class OrderView(View):
     pass
 
