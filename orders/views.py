@@ -13,23 +13,17 @@ class AddCartView(View):
         
         user_id = request.user
         data = request.loads(request.body)
-        if not User.objects.filter(id = user_id).exist():
-            unlogin_user = User.objects.create()
-            Order.objects.create(user    = unlogin_user,
-                                 product = Product.objects.get(id = data['id']),)
-
-    # try:
+        # if not User.objects.filter(id = user_id).exist():
+            # Order.objects.create(user = unlogin_user)
+        try:
+            ProductOrder.objects.create(order = Order.objects.get(user_id = user_id),
+                                        product = Product.objects.get(id = data['id']),
+                                        quantity = data['quantity'])
         
-        
-
-
-
-        
-        
-    #     return JsonResponse({'message': 'status'}, status = 200)
+            return JsonResponse({'message': 'status'}, status = 200)
     
-    # except:
-    #     return None
+        except KeyError as e:
+            return JsonResponse({'Invalid KeyError {}'.format(e)}, status = 400)
 
 class OrderView(View):
     pass

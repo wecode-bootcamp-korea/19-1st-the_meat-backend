@@ -27,7 +27,7 @@ class Address(models.Model):
         
 class UserRank(models.Model):
     rank_name        = models.CharField(max_length = 15)
-    previous_payment = models.DecimalField(max_digits = 8, decimal_places = 2)
+    previous_payment = models.DecimalField(max_digits = 11, decimal_places = 2)
     created_at       = models.DateTimeField(auto_now_add = True)
     updated_at       = models.DateTimeField(auto_now = True)
     

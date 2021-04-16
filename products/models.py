@@ -23,7 +23,6 @@ class Product(models.Model):
     name           = models.CharField(max_length = 100)
     price          = models.DecimalField(max_digits = 10, decimal_places = 2)
     discount_rate  = models.DecimalField(max_digits = 5, decimal_places = 2, default = 0)
-    unit           = models.DecimalField(max_digits = 5, decimal_places = 2)
     best_before    = models.IntegerField()
     sub_category   = models.ForeignKey('SubCategory', on_delete = SET_NULL, null = True)
     created_at     = models.DateTimeField(auto_now_add = True)
@@ -34,8 +33,8 @@ class Product(models.Model):
         
     def real_price(self):
         if self.discount_rate == 0:
-            return [{'real_price': self.price,
-                     self.price: 0}]
+            return {'real_price': self.price,
+                     self.price: 0}
         else:
             return {'real_price': self.price * (1 - self.discount_rate/100)}
         
