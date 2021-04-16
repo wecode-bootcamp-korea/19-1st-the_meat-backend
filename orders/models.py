@@ -12,7 +12,7 @@ class Order(models.Model):
         db_table = 'orders'
 
 class Status(models.Model):
-    status      = models.SmallIntegerField()
+    status_num  = models.SmallIntegerField()
     status_name = models.CharField(max_length = 12)
     created_at  = models.DateTimeField(auto_now_add = True)
     updated_at  = models.DateTimeField(auto_now = True)
