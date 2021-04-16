@@ -26,6 +26,9 @@ class ProductOrder(models.Model):
     quantity   = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
-        
+    
+    def get_total_price(self):
+        return self.quantity * self.product.real_price
+    
     class Meta:
         db_table = 'products_order'
