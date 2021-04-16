@@ -10,7 +10,7 @@ class Order(models.Model):
     
     class Meta:
         db_table = 'orders'
-
+        
 class Status(models.Model):
     status_num  = models.SmallIntegerField()
     status_name = models.CharField(max_length = 12)
