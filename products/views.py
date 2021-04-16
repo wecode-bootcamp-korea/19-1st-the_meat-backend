@@ -11,4 +11,3 @@ class ProductView(View):
     
     def update(self, request):
         pass
-    

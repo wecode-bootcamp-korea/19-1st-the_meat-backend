@@ -37,7 +37,7 @@ class Product(models.Model):
             return [{'real_price': self.price,
                      self.price: 0}]
         else:
-            return {'real_price': self.price}
+            return {'real_price': self.price * (1 - self.discount_rate/100)}
         
 class ProductImage(models.Model):
     image_url  = models.URLField(max_length = 500)
