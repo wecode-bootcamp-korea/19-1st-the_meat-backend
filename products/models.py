@@ -1,4 +1,5 @@
 import decimal
+from typing import Sequence
 
 from django.db                 import models
 from django.db.models.deletion import CASCADE, SET_NULL
@@ -43,7 +44,7 @@ class Product(models.Model):
         
 class ProductImage(models.Model):
     image_url  = models.URLField(max_length = 500)
-    sequence   = models.IntegerField()
+    sequences  = models.IntegerField()
     product    = models.ForeignKey('Product', on_delete = CASCADE)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
@@ -78,3 +79,11 @@ class ReviewImage(models.Model):
     
     class Meta:
         db_table = 'review_images'
+        
+class MainImage(models.Model):
+    image_url = models.URLField(max_length = 500)
+    sequences = models.SmallIntegerField()
+    
+    class Meta:
+        db_table = 'main_images'
+        
