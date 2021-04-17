@@ -23,7 +23,7 @@ class SubCategory(models.Model):
         
 class Product(models.Model):
     name           = models.CharField(max_length = 100)
-    original_price = models.DecimalField(max_digits = 10, decimal_places = 2)
+    original_price = models.DecimalField(max_digits = 12, decimal_places = 2)
     discount_rate  = models.DecimalField(max_digits = 5, decimal_places = 2, default = 0)
     unit           = models.DecimalField(max_digits = 5, decimal_places = 2)
     best_before    = models.IntegerField()
