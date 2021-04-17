@@ -7,8 +7,8 @@ class User(models.Model):
     name         = models.CharField(max_length = 16)
     phone_number = models.CharField(max_length = 30)
     email        = models.EmailField(max_length = 60)
-    main_address = models.CharField(max_length = 100)    
-    user_rank    = models.ForeignKey('UserRank', on_delete = CASCADE)
+    user_rank    = models.ForeignKey('UserRank', on_delete = CASCADE, default = 1)
+    voucher      = models.ManyToManyField('Voucher', through = 'UserVoucher')
     created_at   = models.DateTimeField(auto_now_add = True)
     updated_at   = models.DateTimeField(auto_now = True)
     
@@ -26,7 +26,7 @@ class Address(models.Model):
         
 class UserRank(models.Model):
     rank_name        = models.CharField(max_length = 15)
-    previous_payment = models.DecimalField(max_digits = 8, decimal_places = 2)
+    previous_payment = models.DecimalField(max_digits = 14, decimal_places = 2)
     created_at       = models.DateTimeField(auto_now_add = True)
     updated_at       = models.DateTimeField(auto_now = True)
     
@@ -37,7 +37,6 @@ class Voucher(models.Model):
     name            = models.CharField(max_length = 20)
     condition       = models.CharField(max_length = 30)
     expiration_date = models.DateTimeField(auto_now = False)
-    user            = models.ManyToManyField(User, through = 'UserVoucher')
     voucher_type    = models.ForeignKey('VoucherType', on_delete = SET_NULL, null = True)
     created_at      = models.DateTimeField(auto_now_add = True)
     updated_at      = models.DateTimeField(auto_now = True)

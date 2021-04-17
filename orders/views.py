@@ -1,8 +1,9 @@
 import json
 
-from django.views import View
+from django.http.response import JsonResponse
+from django.views         import View
 
-# from .models import *
+class CartView(View):
+    def post(self, request):
 
-class OrderView(View):
-    pass
+        pass
