@@ -14,10 +14,10 @@ class ProductDetailView(View):
             product = Product.objects.get(id = id)
             
             result = {
-                'id': product.id,
-                'name': product.name,
-                'image_url': [image.image_url for image in product.productimage_set.all()],
-                'unit': product.unit,
+                'id'        : product.id,
+                'name'      : product.name,
+                'image_url' : [image.image_url for image in product.productimage_set.all()],
+                'unit'      : product.unit,
                 'real_price': product.get_real_price()['real_price'],
             }
             
