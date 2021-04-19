@@ -296,3 +296,4 @@ Thumbs.db
 
 *.csv
 mysettings
+.idea/*
