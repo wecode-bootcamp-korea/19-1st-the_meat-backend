@@ -292,7 +292,10 @@ Thumbs.db
 !.vscode/extensions.json
 *.code-workspace
 
-# End of https://www.toptal.com/developers/gitignore/api/macos,python,vscode,pycharm
-
 *.csv
 mysettings
+.DS_Store
+*.pyc
+__pycache__
+
+# End of https://www.toptal.com/developers/gitignore/api/macos,python,vscode,pycharm
