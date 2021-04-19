@@ -14,9 +14,10 @@ class CartView(View):
     def post(self, request):
         try:
             # user_id    = request.user
+            user_id    = 1
             data       = json.loads(request.body)
-            user_order = Order.objects.filter(Q(user_id = data['user_id']) & Q(status_id = 1)).first()
-            
+            user_order = Order.objects.filter(Q(user_id = user_id) & Q(status_id = 1)).first()
+
             if user_order.productorder_set.filter(product_id=data['id']).exists():
                 cart_instance = user_order.productorder_set.get(product_id = data['id'])
                 cart_instance.quantity += int(data['quantity'])
@@ -25,17 +26,23 @@ class CartView(View):
                 ProductOrder.objects.create(order = user_order,
                                             product_id = data['id'],
                                             quantity = data['quantity'])
-
-            return JsonResponse({'message': 'Success'}, status = 201)
+                
+            result_object = user_order.productorder_set.get(product_id = data['id'])
+            result        = {
+                'id'       : result_object.product_id,
+                'order_id' : result_object.order_id,
+                'quantity' : result_object.quantity,
+            } 
+            return JsonResponse({'result': result}, status = 201)
     
         except KeyError as e:
-            return JsonResponse({'message': "Invalid KeyError by \'{}\'".format(e)}, status = 400)
+            return JsonResponse({'message': "Invalid KeyError by '{e}'"}, status = 400)
     
     def get(self, request):
         try:
-            # user_id        = request.user
+            user_id        = request.user
             in_cart_products = ProductOrder.objects.filter(
-                order = Order.objects.filter(Q(user_id = 1) &
+                order = Order.objects.filter(Q(user_id = user_id) &
                                              Q(status_id = 1)).first())
             
             results = [{
@@ -54,10 +61,10 @@ class CartView(View):
     def patch(self, request):
         try:
             data = json.loads(request.body)
-            # user_id        = request.user
+            user_id        = request.user
             
             in_cart_product = ProductOrder.objects.get(Q(product_id = data['id']) &
-                                                       Q(order      = Order.objects.get(Q(user_id = data['user_id']) &
+                                                       Q(order      = Order.objects.get(Q(user_id = user_id) &
                                                                                       Q(status_id = 1))))
             in_cart_product.quantity = int(data['quantity'])
             in_cart_product.save()
@@ -73,10 +80,11 @@ class CartView(View):
     
     def put(self, request):
         try:
+            user_id = request.user
             data = json.loads(request.body)
 
             ProductOrder.objects.get(Q(product_id = data['id']) &
-                                     Q(order      = Order.objects.get(Q(user_id = data['user_id']) &
+                                     Q(order      = Order.objects.get(Q(user_id = user_id) &
                                                                       Q(status_id = 1)))).delete()
             
             return JsonResponse({'message': 'Success'}, status = 200)
