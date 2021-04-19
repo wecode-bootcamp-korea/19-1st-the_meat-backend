@@ -297,3 +297,6 @@ Thumbs.db
 *.csv
 mysettings
 .idea/*
+*.pyc
+.__pycache__
+
