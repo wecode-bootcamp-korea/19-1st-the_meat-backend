@@ -23,6 +23,6 @@ class ProductDetailView(View):
             
             return JsonResponse({'result': result}, status = 200)
         
-        except Exception as e:
+        except KeyError as e:
             return JsonResponse({'Key_Error': f"by {e}"}, status = 400)
         
