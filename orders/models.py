@@ -5,8 +5,8 @@ class Order(models.Model):
     status     = models.ForeignKey('Status', on_delete = SET_NULL, null = True, default = 1)
     user       = models.ForeignKey('users.User', on_delete = CASCADE)
     product    = models.ManyToManyField('products.Product', through ='ProductOrder')
-    created_at = models.DateTimeField(auto_now_add = True)
-    updated_at = models.DateTimeField(auto_now = True)
+    created_at = models.DateField(auto_now_add = True)
+    updated_at = models.DateField(auto_now = True)
     
     class Meta:
         db_table = 'orders'
@@ -14,8 +14,8 @@ class Order(models.Model):
 class Status(models.Model):
     status_num  = models.SmallIntegerField()
     status_name = models.CharField(max_length = 12)
-    created_at  = models.DateTimeField(auto_now_add = True)
-    updated_at  = models.DateTimeField(auto_now = True)
+    created_at  = models.DateField(auto_now_add = True)
+    updated_at  = models.DateField(auto_now = True)
 
     class Meta:
         db_table = 'status'
@@ -24,8 +24,8 @@ class ProductOrder(models.Model):
     order      = models.ForeignKey(Order, on_delete = SET_NULL, null = True)
     product    = models.ForeignKey('products.Product', on_delete = SET_NULL, null = True)
     quantity   = models.IntegerField()
-    created_at = models.DateTimeField(auto_now_add = True)
-    updated_at = models.DateTimeField(auto_now = True)
+    created_at = models.DateField(auto_now_add = True)
+    updated_at = models.DateField(auto_now = True)
     
     def get_total_price(self):
         return self.quantity * self.product.get_real_price()['real_price']
