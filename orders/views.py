@@ -38,3 +38,60 @@ class CartView(View):
         except KeyError as e:
             return JsonResponse({'message': "Invalid KeyError by '{e}'"}, status = 400)
     
+    def get(self, request):
+        try:
+            user_id        = request.user
+            in_cart_products = ProductOrder.objects.filter(
+                order = Order.objects.filter(Q(user_id = user_id) &
+                                             Q(status_id = 1)).first())
+            
+            results = [{
+                'id'         : in_cart_product.product.id,
+                'name'       : in_cart_product.product.name,
+                'image_url'  : [x.image_url for x in in_cart_product.product.productimage_set.all()],
+                'real_price' : in_cart_product.product.get_real_price()['real_price'],
+                'total_price': in_cart_product.get_total_price()}
+                           for in_cart_product in in_cart_products]
+
+            return JsonResponse({'result': results}, status = 200)
+        
+        except KeyError as e:
+            return JsonResponse({'result': f'Invalid KeyError by {e}'}, status = 400)
+        
+    def patch(self, request):
+        try:
+            data = json.loads(request.body)
+            user_id        = request.user
+            
+            in_cart_product = ProductOrder.objects.get(Q(product_id = data['id']) &
+                                                       Q(order      = Order.objects.get(Q(user_id = user_id) &
+                                                                                      Q(status_id = 1))))
+            in_cart_product.quantity = int(data['quantity'])
+            in_cart_product.save()
+    
+            results = {'id'         : data['id'],
+                       'quantity'   : in_cart_product.quantity,
+                       'total_price': in_cart_product.get_total_price()}
+            
+            return JsonResponse({'result': results}, status = 200)
+        
+        except KeyError as e:
+            return JsonResponse({'result': f'Invalid KeyError by {e}'}, status = 400)
+    
+    def put(self, request):
+        try:
+            user_id = request.user
+            data = json.loads(request.body)
+
+            ProductOrder.objects.get(Q(product_id = data['id']) &
+                                     Q(order      = Order.objects.get(Q(user_id = user_id) &
+                                                                      Q(status_id = 1)))).delete()
+            
+            return JsonResponse({'message': 'Success'}, status = 200)
+        
+        except KeyError as e:
+            return JsonResponse({'message': f'Invalid KeyError by {e}'}, status = 400)
+
+class OrderView(View):
+    def post(self, request):
+        pass
