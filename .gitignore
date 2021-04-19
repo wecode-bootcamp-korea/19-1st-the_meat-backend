@@ -296,3 +296,5 @@ Thumbs.db
 
 *.csv
 mysettings
+.idea/*
+*.pyc
