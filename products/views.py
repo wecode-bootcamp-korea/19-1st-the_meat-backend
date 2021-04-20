@@ -7,7 +7,7 @@ class ProductListView(View):
     def get(self, request):
         category = request.GET.get('category', None)
         sub_category = request.GET.get('sub_category', None)
-        discount = request.GET.get('sort', None)
+        discount = request.GET.get('discount', None)
         new = request.GET.get('new', None)
 
         products = Product.objects.all()
@@ -31,7 +31,7 @@ class ProductListView(View):
                     'image_url'    : [product_image.image_url for product_image in product.productimage_set.all()],
                     'price'        : int(float(product.get_real_price()['real_price'])),
                     'real_price'   : int(float(product.original_price)),
-                    'discount_rate': int(float(product.discount_rate)),
+                    'discount_rate': product.discount_rate,
         } for product in products]
 
         return JsonResponse({'result': result}, status=200)
