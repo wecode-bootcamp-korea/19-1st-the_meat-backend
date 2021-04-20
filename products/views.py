@@ -33,8 +33,6 @@ class ProductListView(View):
 
         result = [{
                     'id'           : product.id,
-                    'sub_category' : product.sub_category.name,
-                    'category'     : product.sub_category.category.name,
                     'created_at'   : product.created_at,
                     'name'         : product.name,
                     'image_url'    : [product_image.image_url for product_image in product.productimage_set.all()],
