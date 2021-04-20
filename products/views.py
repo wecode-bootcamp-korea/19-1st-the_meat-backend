@@ -6,11 +6,11 @@ from django.db.models import Q
 
 class ProductListView(View):
     def get(self, request):
-        category = request.GET.get('category', None)
+        category     = request.GET.get('category', None)
         sub_category = request.GET.get('sub_category', None)
-        pick = request.GET.get('pick', None)
-        discount = request.GET.get('discount', None)
-        new = request.GET.get('new', None)
+        pick         = request.GET.get('pick', None)
+        discount     = request.GET.get('discount', None)
+        new          = request.GET.get('new', None)
 
         q = Q()
 
