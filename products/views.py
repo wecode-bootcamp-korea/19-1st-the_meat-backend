@@ -9,6 +9,7 @@ class ProductListView(View):
         sub_category = request.GET.get('sub_category', None)
         discount = request.GET.get('discount', None)
         new = request.GET.get('new', None)
+        pick = request.GET.get('pick', None)
 
         products = Product.objects.all()
 
@@ -18,6 +19,9 @@ class ProductListView(View):
         if sub_category:
             products = products.filter(sub_category__name=sub_category)
 
+        if pick:
+            products = products.filter(sub_category__category__name=pick)[:4]
+
         if discount:
             products = products.order_by('-discount_rate')[:6]
 
@@ -25,13 +29,14 @@ class ProductListView(View):
             products = products.order_by('-created_at')[:4]
 
         result = [{
-
                     'id'           : product.id,
+                    'sub_category' : product.sub_category.name,
+                    'category'     : product.sub_category.category.name,
                     'created_at'   : product.created_at,
                     'name'         : product.name,
                     'image_url'    : [product_image.image_url for product_image in product.productimage_set.all()],
-                    'price'        : int(float(product.get_real_price()['real_price'])),
-                    'real_price'   : int(float(product.original_price)),
+                    'price'        : product.get_real_price()['real_price'],
+                    'real_price'   : int(product.original_price),
                     'discount_rate': int(float(product.discount_rate)),
         } for product in products]
 
