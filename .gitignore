@@ -298,5 +298,6 @@ mysettings
 *.pyc
 __pycache__
 *.numbers
+.idea/*
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,python,vscode,pycharm
