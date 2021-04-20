@@ -25,13 +25,14 @@ class ProductListView(View):
             products = products.order_by('-created_at')[:4]
 
         result = [{
+
                     'id'           : product.id,
                     'created_at'   : product.created_at,
                     'name'         : product.name,
                     'image_url'    : [product_image.image_url for product_image in product.productimage_set.all()],
                     'price'        : int(float(product.get_real_price()['real_price'])),
                     'real_price'   : int(float(product.original_price)),
-                    'discount_rate': product.discount_rate,
+                    'discount_rate': int(float(product.discount_rate)),
         } for product in products]
 
         return JsonResponse({'result': result}, status=200)
