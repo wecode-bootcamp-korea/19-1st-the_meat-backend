@@ -36,8 +36,8 @@ class ProductListView(View):
                     'created_at'   : product.created_at,
                     'name'         : product.name,
                     'image_url'    : [product_image.image_url for product_image in product.productimage_set.all()],
-                    'price'        : int(product.get_real_price()['real_price']),
-                    'real_price'   : int(product.original_price),
+                    'price'        : format(int(product.get_real_price()['real_price']),','),
+                    'real_price'   : format(int(product.original_price),','),
                     'discount_rate': int(product.discount_rate),
         } for product in products]
 
