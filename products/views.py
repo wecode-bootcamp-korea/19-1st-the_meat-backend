@@ -42,10 +42,3 @@ class ProductListView(View):
         } for product in products]
 
         return JsonResponse({'result': result}, status=200)
-
-# 인기순, 최신순 가격순(높낮)
-# class SortView(View):
-#     def get(self, request):
-#
-
-# 배송이 완료중인 상태인 상품들의 수량을 체크해서 인기순을 필터를 건다...
