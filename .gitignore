@@ -297,5 +297,11 @@ mysettings
 .DS_Store
 *.pyc
 __pycache__
+<<<<<<< HEAD
 .idea/*
+=======
+*.numbers
+.idea/*
+
+>>>>>>> main
 # End of https://www.toptal.com/developers/gitignore/api/macos,python,vscode,pycharm
