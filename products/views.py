@@ -43,38 +43,4 @@ class ProductListView(View):
 
         return JsonResponse({'result': result}, status=200)
 
-#인기순, 최신순, 가격순(낮은, 높은)
-class SortView(View):
-    def get(self, request):
-        category = request.GET.get('category')
-        sub_category = request.GET.get('sub_category')
-        popular = request.GET.get('popular')
-        new = request.GET.get('new')
-        high_price = request.GET.get('high_price')
-        low_price = request.GET.get('low_price')
-
-
-
-        if category:
-            products = Product.objects.filter(sub_category__category__name=category)
-
-        if sub_category:
-            products = Product.objects.filter(sub_category__name=sub_category)
-
-        if popular:
-            products = Product.objects.all()
-            for product in products:
-                order = product.productorder_set.filter(order__status__status_name='배송완료')
-                quantities = order.order_by('-quantity')
-
-        if new:
-            products = Product.objects.order_by('-created_at')
-
-        if high_price:
-            products = Product.objects.all()
-            high_price = sorted(products, key=lambda x: x.original_price)
-
-        if low_price:
-            products = Product.objects.all()
-            low_price = sorted(products, key=lambda x: -x.original_price)
 
