@@ -2,7 +2,6 @@ from django.http      import JsonResponse
 from django.views     import View
 
 from products.models  import Product
-from orders.models    import ProductOrder
 from django.db.models import Q
 
 class ProductListView(View):
@@ -45,4 +44,9 @@ class ProductListView(View):
                     'discount_rate'  : int(product.discount_rate),
         } for product in products]
 
-        return JsonResponse({'result': result}, status=200)
+        page = int(request.GET.get('page', 1))
+        page_size = 8
+        limit = int(page_size * page)
+        offset = int(limit - page_size)
+
+        return JsonResponse({'result': result[offset:limit]}, status=200)
