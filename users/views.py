@@ -19,7 +19,6 @@ class UserView(View):
         phone_number      = data['phone_number']
         password          = data['password']
         confirm_password  = data['confirm_password']
-        #main_address      = data['main_address']
         
         p_email        = re.compile('^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
         p_password     = re.compile('^[a-zA-Z0-9]*$')
@@ -61,7 +60,6 @@ class UserView(View):
                     phone_number      = data['phone_number'],
                     password          = hashed_pw.decode('utf-8'),
                     name              = data['name'],
-                    #main_address     = data['main_address'],
                     user_rank         = user_rank_data
             ) 
 
