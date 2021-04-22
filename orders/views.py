@@ -1,13 +1,11 @@
 import json
+from django.core import exceptions
 from django.http import response
 
 from django.http.response import JsonResponse
 from django.views         import View
-from django.db.models     import Q
 
-from .models         import Order, Status, ProductOrder
-from users.models    import User
-from products.models import Product
+from .models         import Order
 
 class CartView(View):
     # @login_decorator
@@ -33,20 +31,24 @@ class CartView(View):
     
     # @login_decorator
     def get(self, request):
+        
+        
         try:
             # user_id = request.user
-            user_order, order_created = Order.objects.get_or_create(user_id   = 1,
-                                                                    status_id = 1)
+            user_order, order_created = Order.objects.get_or_create(user_id = 1, status_id = 1)
+
             if not order_created:
-                products_in_cart = user_order.product.all()
+                products = user_order.product.all()
                 results = [{
                     'id'         : product.id,
                     'name'       : product.name,
-                    'quantity'   : product.productorder_set.get(product = product).quantity,
+                    'quantity'   : product.productorder_set.get(order   = user_order,
+                                                                product = product).quantity,
                     'image_url'  : [image.image_url for image in product.productimage_set.all()],
                     'real_price' : int(product.get_real_price()['real_price']),
-                    'total_price': int(product.productorder_set.get(product = product).get_total_price()),
-                    } for product in products_in_cart]
+                    'total_price': int(product.productorder_set.get(order   = user_order,
+                                                                    product = product).get_total_price()),
+                    } for product in products]
                 
                 total_sum = format(sum([order['total_price'] for order in results]), ',')
                 
@@ -56,6 +58,9 @@ class CartView(View):
         
         except Order.MultipleObjectsReturned:
             return JsonResponse({'Error': "MORE"}, status = 400)
+        
+        except Exception as e:
+            return JsonResponse({'Error': f"{e}"}, status = 400)
         
     # @login_decorator
     def patch(self, request):
@@ -76,6 +81,10 @@ class CartView(View):
         
         except Order.MultipleObjectsReturned:
             return JsonResponse({'message': "MORE"}, status = 400)
+        
+        except Exception as e:
+            return JsonResponse({'message': f"{e}"}, status = 400)
+            
             
     # @login_decorator
     def put(self, request):
@@ -83,25 +92,65 @@ class CartView(View):
             data = json.loads(request.body)
             user_id = data["user_id"]
             
-            user_order, order_created = Order.objects.get_or_create(user_id   = user_id,
-                                                                    status_id = 1)
+            user_order, order_created = Order.objects.get_or_create(user_id = user_id, status_id = 1)
 
-            user_cart = user_order.productorder_set.get(product_id = data['id']).delete()
+            if not order_created:
+                user_order.productorder_set.get(product_id = data['id']).delete()
 
             products_in_cart = user_order.product.all()
             results = [{
                 'id'         : product.id,
                 'name'       : product.name,
                 'image_url'  : [image.image_url for image in product.productimage_set.all()],
-                'quantity'   : product.productorder_set.get(product = product).quantity,
+                'quantity'   : product.productorder_set.get(order = user_order,
+                                                            product = product).quantity,
                 'real_price' : product.get_real_price()['real_price'],
-                'total_price': product.productorder_set.get(product = product).get_total_price()}
+                'total_price': product.productorder_set.get(order = user_order,
+                                                            product = product).get_total_price()}
                 for product in products_in_cart]
                 
-            total_sum = format(sum([int(result['total_price']) for result in results]), ',')
-            print(total_sum)
+            total_sum = sum([int(result['total_price']) for result in results])
             
             return JsonResponse({'message': results, 'sum': total_sum}, status = 200)
         
         except Order.MultipleObjectsReturned:
             return JsonResponse({'Error': "MORE"}, status = 400)
+        
+class OrderBuyView(View):
+    # @login_decorator
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            
+            user_id     = data["user_id"]
+            products_id = data['id']
+            
+            user_order, order_created     = Order.objects.get_or_create(user_id = user_id, status_id = 1)
+            buy_order , buy_order_created = Order.objects.get_or_create(user_id = user_id, status_id = 2)
+            
+            for product_id in products_id:
+                buy_product = user_order.productorder_set.get(product_id = product_id)
+                buy_order.productorder_set.update_or_create(order       = buy_order,
+                                                            product_id  = product_id,
+                                                            quantity    = buy_product.quantity)
+                
+                user_order.productorder_set.get(product_id = product_id).delete()
+            
+            if user_order.productorder_set.all().exists():
+                results = [{
+                    'id'             : cart.product_id,
+                    'name'           : cart.product.name,
+                    'original_price' : cart.product.get_real_price()['original_price'],
+                    'real_price'     : int(cart.product.get_real_price()['real_price']),
+                    'quantity'       : cart.quantity,
+                } for cart in user_order.productorder_set.all()]
+            else:
+                results = []
+                
+            return JsonResponse({'message':'Success', 'result': results}, status = 200)
+        
+        except Order.MultipleObjectsReturned:
+            return JsonResponse({'Error': "MORE"}, status = 400)
+            
+        except Exception as e:
+            return JsonResponse({'message': f'{e} Invalid access'}, status = 400)
