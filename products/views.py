@@ -21,10 +21,10 @@ class ProductListView(View):
         if sub_category:
             q &= Q(sub_category__name=sub_category)
 
-        if pick:
-            q &= Q(sub_category__category__name=pick)
-
         products = Product.objects.filter(q)
+
+        if pick:
+            products = products.filter(sub_category__category__name=pick)[:4]
 
         if discount:
             products = products.order_by('-discount_rate')[:6]
