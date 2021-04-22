@@ -16,8 +16,8 @@ class CartView(View):
             user_id                   = request.user
             STATUS_IN_CART            = Status.objects.get(id = 1)
             
-            user_order, order_created = Order.objects.get_or_create(user_id   = user_id,
-                                                                    status_id = STATUS_IN_CART)
+            user_order, order_created = Order.objects.get_or_create(user_id = user_id,
+                                                                    status  = STATUS_IN_CART)
             
             if user_order.productorder_set.filter(product_id = data['id']).exists():
                 user_cart           = user_order.productorder_set.get(product_id = data['id'])
@@ -38,8 +38,8 @@ class CartView(View):
         try:
             user_id                   = request.user
             STATUS_IN_CART            = Status.objects.get(id = 1)
-            user_order, order_created = Order.objects.get_or_create(user_id   = user_id,
-                                                                    status_id = STATUS_IN_CART)
+            user_order, order_created = Order.objects.get_or_create(user_id = user_id,
+                                                                    status  = STATUS_IN_CART)
             
             if not order_created:
                 products = user_order.product.all()
@@ -72,8 +72,8 @@ class CartView(View):
             data                      = json.loads(request.body)
             user_id                   = request.user
             STATUS_IN_CART            = Status.objects.get(id = 1)
-            user_order, order_created = Order.objects.get_or_create(user_id   = user_id,
-                                                                    status_id = STATUS_IN_CART)
+            user_order, order_created = Order.objects.get_or_create(user_id = user_id,
+                                                                    status  = STATUS_IN_CART)
             if not order_created:
                 user_cart                = user_order.productorder_set.filter(order   = user_order)
                 product_in_cart          = user_order.productorder_set.get(product_id = data['id'])
@@ -94,7 +94,7 @@ class CartView(View):
             user_id                   = request.user
             STATUS_IN_CART            = Status.objects.get(id = 1)
             user_order, order_created = Order.objects.get_or_create(user_id = user_id,
-                                                                    status_id = STATUS_IN_CART)
+                                                                    status  = STATUS_IN_CART)
 
             if not order_created:
                 user_order.productorder_set.get(product_id = data['id']).delete()
@@ -127,12 +127,12 @@ class OrderBuyView(View):
             STATUS_IN_CART            = Status.objects.get(id = 1)
             STATUS_IN_BUY             = Status.objects.get(id = 2)
             user_order, order_created = Order.objects.get_or_create(user_id = user_id,
-                                                                    status_id = STATUS_IN_CART)
+                                                                    status  = STATUS_IN_CART)
             user_order.status_id = STATUS_IN_BUY
             user_order.save()
             
-            Order.objects.create(user_id   = user_id,
-                                 status_id = STATUS_IN_CART)
+            Order.objects.create(user_id = user_id,
+                                 status  = STATUS_IN_CART)
             
             if user_order.productorder_set.all().exists():
                 results = [{
