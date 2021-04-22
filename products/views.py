@@ -38,7 +38,7 @@ class ProductListView(View):
                     'name'         : product.name,
                     'image_url'    : [product_image.image_url for product_image in product.productimage_set.all()],
                     'price'        : int(product.get_real_price()['real_price']),
-                    'real_price'   : int(product.original_price),
+                    'real_price'   : format(int(product.original_price),','),
                     'discount_rate': int(product.discount_rate),
         } for product in products]
 
@@ -90,7 +90,7 @@ class ProductDetailView(View):
                 'name'      : product.name,
                 'image_url' : [image.image_url for image in product.productimage_set.all()],
                 'unit'      : product.unit,
-                'real_price': int(product.get_real_price()['real_price']),
+                'real_price': format(int(product.get_real_price()['real_price']),','),
             }
             
             return JsonResponse({'result': result}, status = 200)
