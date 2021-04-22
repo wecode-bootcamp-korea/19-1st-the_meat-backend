@@ -5,8 +5,9 @@ import jwt
 
 from django.http   import JsonResponse
 from django.views  import View 
-from .models       import User, UserRank 
+from .models       import User, UserRank, Address 
 from orders.models import Order
+from .utils        import LoginDecorator
 
 class UserView(View):
     def post(self, request):
@@ -91,5 +92,27 @@ class LoginView(View):
             else:   
                 return JsonResponse({"message": "INVALID_EMAIL"}, status=401)
             
+        except KeyError:
+            return JsonResponse({"message": "KEY_ERROR"}, status=400)
+
+class AddressView(View):
+    @LoginDecorator
+    def post(self, request):
+        
+        try:
+            data = json.loads(request.body)
+            address = data['address']
+            user    = request.user
+            
+            if Address.objects.filter(address=data['address']).exists():
+               return JsonResponse({"message": "ADDRESS_ERROR"}, status=401)
+           
+            Address.objects.create(
+                    address = data['address'],
+                    user = request.user
+            )
+
+            return JsonResponse({'message' : 'SUCCESS'}, status=200)
+        
         except KeyError:
             return JsonResponse({"message": "KEY_ERROR"}, status=400)
