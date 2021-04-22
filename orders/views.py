@@ -9,11 +9,11 @@ from users.utils import LoginDecorator
 from .models     import Order
 
 class CartView(View):
-    # @LoginDecorator
+    @LoginDecorator
     def post(self, request):
         try:
             data                      = json.loads(request.body)
-            user_id                   = 1
+            user_id                   = request.user
             STATUS_IN_CART            = 1
             
             user_order, order_created = Order.objects.get_or_create(user_id = user_id,
