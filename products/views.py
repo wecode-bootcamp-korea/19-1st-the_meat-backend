@@ -20,9 +20,6 @@ class ProductListView(View):
         if sub_category:
             q &= Q(sub_category__name=sub_category)
 
-        # if pick:
-        #     q &= Q(sub_category__category__name=pick)[:4]
-
         products = Product.objects.filter(q)
 
         if pick:
@@ -44,9 +41,4 @@ class ProductListView(View):
                     'discount_rate'  : int(product.discount_rate),
         } for product in products]
 
-        page = int(request.GET.get('page', 1))
-        page_size = 8
-        limit = int(page_size * page)
-        offset = int(limit - page_size)
-
-        return JsonResponse({'result': result[offset:limit]}, status=200)
+        return JsonResponse({'result': result}, status=200)
