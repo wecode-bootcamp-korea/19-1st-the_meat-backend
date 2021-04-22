@@ -8,6 +8,7 @@ from django.views  import View
 from .models       import User, UserRank, Address 
 from orders.models import Order
 from .utils        import LoginDecorator
+
 class UserView(View):
     def post(self, request):
         data = json.loads(request.body)
