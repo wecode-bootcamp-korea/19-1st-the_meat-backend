@@ -97,15 +97,22 @@ class LoginView(View):
 
 class AddressView(View):
     @LoginDecorator
-    def post(self, request): 
+    def post(self, request):
         
-        data = json.loads(request.body)
-        address = data['address']
-        user    = request.user
-        
-        Address.objects.create(
-                address = data['address'],
-                user = request.user
-        )
+        try:
+            data = json.loads(request.body)
+            address = data['address']
+            user    = request.user
+            
+            if Address.objects.filter(address=data['address']).exists():
+               return JsonResponse({"message": "ADDRESS_ERROR"}, status=401)
+           
+            Address.objects.create(
+                    address = data['address'],
+                    user = request.user
+            )
 
-        return JsonResponse({'message' : 'SUCCESS'}, status=200)
+            return JsonResponse({'message' : 'SUCCESS'}, status=200)
+        
+        except KeyError:
+            return JsonResponse({"message": "KEY_ERROR"}, status=400)
