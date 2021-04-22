@@ -1,8 +1,9 @@
 from django.http      import JsonResponse
 from django.views     import View
 
-from products.models  import Product
-from django.db.models import Q
+from products.models        import Product
+from django.db.models       import Q
+from django.core.exceptions import ObjectDoesNotExist
 
 class ProductListView(View):
     def get(self, request):
@@ -20,10 +21,10 @@ class ProductListView(View):
         if sub_category:
             q &= Q(sub_category__name=sub_category)
 
-        products = Product.objects.filter(q)
-
         if pick:
-            products = products.filter(sub_category__category__name=pick)[:4]
+            q &= Q(sub_category__category__name=pick)
+
+        products = Product.objects.filter(q)
 
         if discount:
             products = products.order_by('-discount_rate')[:6]
@@ -32,13 +33,13 @@ class ProductListView(View):
             products = products.order_by('-created_at')[:4]
 
         result = [{
-                    'id'             : product.id,
-                    'created_at'     : product.created_at,
-                    'name'           : product.name,
-                    'image_url'      : [product_image.image_url for product_image in product.productimage_set.all()],
-                    'original_price' : product.get_real_price()['original_price'],
-                    'real_price'     : format(int(product.get_real_price()['real_price']), ','),
-                    'discount_rate'  : int(product.discount_rate),
+                    'id'           : product.id,
+                    'created_at'   : product.created_at,
+                    'name'         : product.name,
+                    'image_url'    : [product_image.image_url for product_image in product.productimage_set.all()],
+                    'price'        : int(product.get_real_price()['real_price']),
+                    'real_price'   : int(product.original_price),
+                    'discount_rate': int(product.discount_rate),
         } for product in products]
 
         return JsonResponse({'result': result}, status=200)
@@ -78,3 +79,21 @@ class FilterView(View):
         } for product in products]
 
         return JsonResponse({'result': result}, status= 200)
+
+class ProductDetailView(View):
+    def get(self, request, id):
+        try:
+            product = Product.objects.get(id = id)
+            
+            result = {
+                'id'        : product.id,
+                'name'      : product.name,
+                'image_url' : [image.image_url for image in product.productimage_set.all()],
+                'unit'      : product.unit,
+                'real_price': int(product.get_real_price()['real_price']),
+            }
+            
+            return JsonResponse({'result': result}, status = 200)
+        
+        except ObjectDoesNotExist:
+            return JsonResponse({"Error": "Invalid Product"}, status = 400)
