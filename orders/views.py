@@ -6,15 +6,15 @@ from django.http.response import JsonResponse
 from django.views         import View
 
 from users.utils import LoginDecorator
-from .models     import Order, Status
+from .models     import Order
 
 class CartView(View):
-    @LoginDecorator
+    # @LoginDecorator
     def post(self, request):
         try:
             data                      = json.loads(request.body)
-            user_id                   = request.user
-            STATUS_IN_CART            = Status.objects.get(id = 1)
+            user_id                   = 1
+            STATUS_IN_CART            = 1
             
             user_order, order_created = Order.objects.get_or_create(user_id = user_id,
                                                                     status  = STATUS_IN_CART)
@@ -32,12 +32,15 @@ class CartView(View):
     
         except Order.MultipleObjectsReturned:
             return JsonResponse({'Error': "MORE"}, status = 400)
+        
+        except Exception as e:
+            return JsonResponse({'Error': f"{e}"}, status = 400)
     
     @LoginDecorator
     def get(self, request):
         try:
             user_id                   = request.user
-            STATUS_IN_CART            = Status.objects.get(id = 1)
+            STATUS_IN_CART            = 1
             user_order, order_created = Order.objects.get_or_create(user_id = user_id,
                                                                     status  = STATUS_IN_CART)
             
@@ -71,7 +74,7 @@ class CartView(View):
         try:
             data                      = json.loads(request.body)
             user_id                   = request.user
-            STATUS_IN_CART            = Status.objects.get(id = 1)
+            STATUS_IN_CART            = 1
             user_order, order_created = Order.objects.get_or_create(user_id = user_id,
                                                                     status  = STATUS_IN_CART)
             if not order_created:
@@ -92,7 +95,7 @@ class CartView(View):
         try:
             data                      = json.loads(request.body)
             user_id                   = request.user
-            STATUS_IN_CART            = Status.objects.get(id = 1)
+            STATUS_IN_CART            = 1
             user_order, order_created = Order.objects.get_or_create(user_id = user_id,
                                                                     status  = STATUS_IN_CART)
 
@@ -124,8 +127,8 @@ class OrderBuyView(View):
         try:
             data                      = json.loads(request.body)
             user_id                   = request.user
-            STATUS_IN_CART            = Status.objects.get(id = 1)
-            STATUS_IN_BUY             = Status.objects.get(id = 2)
+            STATUS_IN_CART            = 1
+            STATUS_IN_BUY             = 2
             user_order, order_created = Order.objects.get_or_create(user_id = user_id,
                                                                     status  = STATUS_IN_CART)
             user_order.status_id = STATUS_IN_BUY
