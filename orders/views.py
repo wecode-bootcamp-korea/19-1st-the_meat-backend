@@ -15,7 +15,6 @@ class CartView(View):
             data                      = json.loads(request.body)
             user_id                   = request.user
             STATUS_IN_CART            = 1
-            
             user_order, order_created = Order.objects.get_or_create(user_id = user_id,
                                                                     status  = STATUS_IN_CART)
             
