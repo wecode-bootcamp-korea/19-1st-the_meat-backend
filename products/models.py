@@ -37,10 +37,11 @@ class Product(models.Model):
     def get_real_price(self):
         if self.discount_rate == 0:
             return {'real_price': self.original_price,
-                    self.original_price: 0}
+                    'original_price': int(self.discount_rate)}
         else:
-            return {'real_price': self.original_price * decimal.Decimal(str(1 - self.discount_rate/100))}
-        
+            return {'real_price': self.original_price * decimal.Decimal(str(1 - self.discount_rate/100)),
+                    'original_price': format(int(self.original_price), ',')}
+
 class ProductImage(models.Model):
     image_url  = models.URLField(max_length = 500)
     sequences  = models.IntegerField()
@@ -87,4 +88,3 @@ class MainImage(models.Model):
     updated_at = models.DateField(auto_now = True)
     class Meta:
         db_table = 'main_images'
-        
