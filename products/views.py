@@ -1,7 +1,8 @@
 import json
 
-from django.http.response import JsonResponse
-from django.views         import View
+from django.http.response   import JsonResponse
+from django.views           import View
+from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Product
 class ProductView(View):
@@ -23,6 +24,6 @@ class ProductDetailView(View):
             
             return JsonResponse({'result': result}, status = 200)
         
-        except KeyError as e:
-            return JsonResponse({'Key_Error': f"by {e}"}, status = 400)
+        except Product.DoesNotExist:
+            return JsonResponse({'Error': "Invalid Product"}, status = 400)
         
