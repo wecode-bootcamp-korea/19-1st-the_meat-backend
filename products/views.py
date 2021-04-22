@@ -38,7 +38,7 @@ class ProductListView(View):
                     'name'         : product.name,
                     'image_url'    : [product_image.image_url for product_image in product.productimage_set.all()],
                     'price'        : int(product.get_real_price()['real_price']),
-                    'real_price'   : format(int(product.original_price),','),
+                    'real_price'   : int(product.original_price),
                     'discount_rate': int(product.discount_rate),
         } for product in products]
 
@@ -69,13 +69,13 @@ class FilterView(View):
                 products = sorted(products, key=lambda x: x.original_price, reverse=True)
 
         result = [{
-                    'id': product.id,
-                    'created_at': product.created_at,
-                    'name': product.name,
-                    'image_url': [product_image.image_url for product_image in product.productimage_set.all()],
+                    'id'            : product.id,
+                    'created_at'    : product.created_at,
+                    'name'          : product.name,
+                    'image_url'     : [product_image.image_url for product_image in product.productimage_set.all()],
                     'original_price': product.get_real_price()['original_price'],
-                    'real_price': format(int(product.get_real_price()['real_price']), ','),
-                    'discount_rate': int(product.discount_rate),
+                    'real_price'    : int(product.get_real_price()['real_price']),
+                    'discount_rate' : int(product.discount_rate),
         } for product in products]
 
         return JsonResponse({'result': result}, status= 200)
@@ -90,7 +90,7 @@ class ProductDetailView(View):
                 'name'      : product.name,
                 'image_url' : [image.image_url for image in product.productimage_set.all()],
                 'unit'      : product.unit,
-                'real_price': format(int(product.get_real_price()['real_price']),','),
+                'real_price': int(product.get_real_price()['real_price']),
             }
             
             return JsonResponse({'result': result}, status = 200)
