@@ -43,35 +43,38 @@ class ProductListView(View):
 
         return JsonResponse({'result': result}, status=200)
 
-#인기순, 최신순, 가격순(낮은, 높은)
-class SortView(View):
+class FilterView(View):
     def get(self, request):
         category = request.GET.get('category')
         sub_category = request.GET.get('sub_category')
-        popular = request.GET.get('popular')
-        new = request.GET.get('new')
-        high_price = request.GET.get('high_price')
-        low_price = request.GET.get('low_price')
+        filter = request.GET.get('filter')
 
-        products = Product.objects.all()
+        q = Q()
+
         if category:
-            products = products.filter(sub_category__category__name=category)
+            q &= Q(sub_category__category__name=category)
 
         if sub_category:
-            products = products.filter(sub_category__name=sub_category)
+            q &= Q(sub_category__name=sub_category)
 
-        if popular:
-            for product in products:
-                order = product.productorder_set.filter(order__status__status_name='배송완료')
-                quantities = order.order_by('-quantity')
+        products = Product.objects.filter(q)
 
-        if new:
-            products = Product.objects.order_by('-created_at')
+        if filter:
+            if filter == '최신순':
+                products = Product.objects.order_by('-created_at')
+            if filter == '낮은가격순':
+                products = sorted(products, key=lambda x: x.original_price)
+            if filter == '높은가격순':
+                products = sorted(products, key=lambda x: x.original_price, reverse=True)
 
-        if high_price:
-            products = Product.objects.all()
-            high_price = sorted(products, key=lambda x: x.original_price)
+        result = [{
+                    'id': product.id,
+                    'created_at': product.created_at,
+                    'name': product.name,
+                    'image_url': [product_image.image_url for product_image in product.productimage_set.all()],
+                    'original_price': product.get_real_price()['original_price'],
+                    'real_price': format(int(product.get_real_price()['real_price']), ','),
+                    'discount_rate': int(product.discount_rate),
+        } for product in products]
 
-        if low_price:
-            products = Product.objects.all()
-            low_price = sorted(products, key=lambda x: -x.original_price)
+        return JsonResponse({'result': result}, status= 200)
