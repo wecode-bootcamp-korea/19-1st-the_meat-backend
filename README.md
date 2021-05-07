@@ -8,14 +8,15 @@
 신지원
 윤서준
 유동헌
-### 🐤 Skill
-## 🐶 FrontEnd
+
+## 🐤 Skill
+🐶 FrontEnd
 javscript
 react
 html
 scss
 css
-## 🐼 BackEnd
+🐼 BackEnd
 python
 django
 Bcrypt
