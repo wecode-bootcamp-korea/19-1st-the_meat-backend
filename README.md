@@ -1,10 +1,38 @@
-# 19-1st-the_meat-backend
-신지원, 윤서준, 유동헌
+# Team The-meat
+## 프로젝트 기간: 2021년 4월 12일 ~ 2021년 4월 23일
+### 🐶 FrontEnd
+서민석
+이재영
+홍진아
+### 🐼 BackEnd
+신지원
+윤서준
+유동헌
+### 🐤 Skill
+## 🐶 FrontEnd
+javscript
+react
+html
+scss
+css
+## 🐼 BackEnd
+python
+django
+Bcrypt
+Jwt
+Mysql
 
 
-## 개발기간: 2021/04/12~2021/04/23
-## 개발인원: front 3명, back 3명
+- 이재영
+❗️기술구현
+네비게이션 바
 
-## 기술 stack
-- front: java script,react 
-- back: Python,Django,mysql,bcrypt,jwt
+카테고리에 onmouseenter,onmouseleave를 사용하고 map함수를 두번돌려 카테고리와 서브카테고리 구현
+sticky 사용을 위해 Nav 컴포넌트 분리
+메인 페이지
+
+배너 이미지 클릭,자동으로 변경
+메뉴텝 클릭시 배경색 변경, 데이터 변경
+장바구니 클릭시 해당 데이터 장바구니로 전송
+🔒 레퍼런스
+이 프로젝트는 더반찬 웹사이트를 참조하여 학습목적으로 만들었습니다. 실무수준의 프로젝트이지만 학습용으로 만들었기 때문에 이 코드를 활용하여 이득을 취하거나 무단 배포할 경우 법적으로 문제될 수 있습니다. 이 프로젝트에서 사용하고 있는 사진 대부분은 위코드에서 구매한 것이므로 해당 프로젝트 외부인이 사용할 수 없습니다.
